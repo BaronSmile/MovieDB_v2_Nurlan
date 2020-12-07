@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types'
 
-import {Card, Space, Tag, Typography, Rate} from 'antd';
+import {Card, Space, Tag, Typography, Rate, Col} from 'antd';
 import './movie.css';
 import img from './no-image.jpg'
 
 import MovieApi from '../../service/movie-api';
-import formatPost from "./format-description";
+import formatPost from "../../utils/format-description";
 import {Consumer} from '../../service/movie-api_context';
 
 const {Title, Text} = Typography;
@@ -30,7 +30,7 @@ export default class Movie extends Component {
     rating: 0,
   }
 
-  movieApi = new MovieApi();
+  movieApi = MovieApi.getInstance();
 
   getTagColor = (rating) => {
     let borderColor = '#E90000'
@@ -46,11 +46,10 @@ export default class Movie extends Component {
     const imgUrl = `${posterUrl}${image}`;
 
 
-    const description = formatPost(overview, 200);
-
+    const description = formatPost(overview, 150);
 
     return (
-        <>
+        <Col span={12}>
           <Card
               hoverable
               cover={image === null ?
@@ -58,7 +57,7 @@ export default class Movie extends Component {
                   : (<img alt="example" src={imgUrl}/>)
               }>
             <Space direction="vertical">
-              <Title level={3}>{title}</Title>
+              <Title level={5}>{title}</Title>
               <span className='rate-number' style={this.getTagColor(rateNumber)}>{rateNumber}</span>
               <Text type="secondary">{releaseDate}</Text>
               <Consumer>
@@ -82,7 +81,7 @@ export default class Movie extends Component {
               />
             </Space>
           </Card>
-        </>
+        </Col>
     )
   };
 }

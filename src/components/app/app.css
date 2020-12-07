@@ -1,23 +1,27 @@
-body{
-  background: #f0f2f5;
-}
-.site-layout {
-  background: #fff;
+body {
+    background: #f0f2f5;
 }
 
-.pagination{
-  margin: 20px 0;
+.site-layout {
+    background: #fff;
 }
-.ant-menu-dark.ant-menu-horizontal{
-  text-align: center;
+
+.pagination {
+    margin: 20px 0;
 }
-.ant-tabs-nav-wrap{
-  justify-content: center;
+
+.ant-menu-dark.ant-menu-horizontal {
+    text-align: center;
 }
-.search-input{
-  margin: 0 auto;
-  width: 40%;
-  display: block;
-  padding: 10px;
-  border: 1px solid #ccc;
+
+.ant-tabs-nav-wrap {
+    justify-content: center;
+}
+
+.search-input {
+    margin: 0 auto;
+    width: 40%;
+    display: block;
+    padding: 10px;
+    border: 1px solid #ccc;
 }

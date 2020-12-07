@@ -1,8 +1,8 @@
 .ant-card {
-    width: 47%;
     height: 280px;
     display: flex;
-    margin: 24px;
+    margin: 10px;
+    box-sizing: border-box;
 }
 
 .ant-card-cover img {
@@ -24,4 +24,12 @@
 .no-img {
     box-sizing: border-box;
     border: 1px solid #eee;
+}
+
+@media (max-width: 1100px){
+    .ant-col-12 {
+        display: block;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 }

@@ -16,7 +16,6 @@ export default class SearchInput extends PureComponent {
   render() {
     const {onChange, value, onKeyPress} = this.props
 
-
     return (
         <DebounceInput
             className='search-input'

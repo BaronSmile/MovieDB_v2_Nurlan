@@ -7,3 +7,10 @@
 .not-found-message{
     margin: 10% auto;
 }
+.error{
+    margin: 0 auto;
+}
+.movieList{
+    max-width: 1200px;
+    margin: 0 auto;
+}
