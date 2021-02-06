@@ -6,17 +6,37 @@ export default class MovieApi {
 
   apiPostersUrlBase = `https://image.tmdb.org/t/p/w185`;
 
-  static getInstance() {
-    if (!this.instance) {
-      this.instance = new MovieApi();
-    }
+  // constructor() {
+  //   this.sessionId = '';
+  //   this.createSession();
+  // }
 
-    return this.instance;
+
+  async getResource(url, value) {
+    const sendData = value
+      ? {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+        },
+        body: JSON.stringify({
+          value,
+        }),
+      }
+      : {};
+
+    try {
+      const res = await fetch(`${this.apiBase}${url}`, sendData);
+      return await res.json();
+    } catch (error) {
+      throw new Error(`Could not connect to API`);
+    }
   }
 
-  constructor() {
-    this.sessionId = null;
-    this.createSession();
+  async searchMovie(keyword, page = 1) {
+    return this.getResource(
+      `search/movie?api_key=${this.apiKey}&query=${keyword}&language=en-US&page=${page}&include_adult=true`,
+    );
   }
 
   createSession = async () => {
@@ -24,46 +44,22 @@ export default class MovieApi {
     this.sessionId = res.guest_session_id;
   };
 
-  async getResource(url) {
-    const res = await fetch(`${this.apiBase}${url}`);
-    if (!res.ok) {
-      throw new Error(`Could not fetch${url}, received ${res.status}`);
-    }
-
-    return res.json();
-  }
-
-  async searchMovie(keyword, page) {
-      return this.getResource(
-        `search/movie?api_key=${this.apiKey}&query=${keyword}&language=en-US&page=${page}&include_adult=true`,
-      );
-  }
-
-  async getGenres() {
-    return this.getResource(`genre/movie/list?api_key=${this.apiKey}&language=en-US`);
-  }
-
-  async postRateMovie(id, rating) {
-    const requestBody = {
-      'value': rating,
-    };
-    const url = `${this.apiBase}movie/${id}/rating?api_key=${this.apiKey}&guest_session_id=${this.sessionId}`;
-
-    await fetch(url,
-
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8',
-        },
-        body: JSON.stringify(requestBody),
-      });
-
-  }
 
   async getRatedMovies() {
     return this.getResource(`guest_session/${this.sessionId}/rated/movies?api_key=${this.apiKey}&language=en-US&sort_by=created_at.desc`);
   }
+
+  async postRateMovie(id, value) {
+    return this.getResource(
+      `movie/${id}/rating?api_key=${this.apiKey}&guest_session_id=${this.sessionId}`,
+      value
+    );
+  }
+
+  async getGenres() {
+    return this.getResource(`genre/movie/list?api_key=${this.apiKey}`);
+  }
+
 
 }
 

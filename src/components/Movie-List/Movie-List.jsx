@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import './movie-list.css';
-import { Row, Spin, Typography } from 'antd';
-import Movie from '../movie/movie';
-import notFound from './notfound.jpg';
+import { Row, Spin } from 'antd';
+import Movie from '../Movie/Movie';
+import notFound from '../../assets/img/notfound.png';
+import notResult from '../../assets/img/notResult.png';
 
-const { Title } = Typography;
 
 // eslint-disable-next-line react/prefer-stateless-function
 export default class MovieList extends Component {
 
   static propTypes = {
-    movies: PropTypes.instanceOf(Array).isRequired,
+    movies: PropTypes.instanceOf(Array),
     loading: PropTypes.bool.isRequired,
     error: PropTypes.bool.isRequired,
     onRate: PropTypes.func.isRequired,
@@ -20,6 +20,7 @@ export default class MovieList extends Component {
   };
 
   static defaultProps = {
+    movies:[],
     ratedMovies: null,
   };
 
@@ -37,8 +38,9 @@ export default class MovieList extends Component {
     }
 
     const errorMessage = error ? <img className='error' src={notFound} alt='error' /> : null;
-    let moviesList =
 
+
+    let moviesList =
       movies.map((
         {
           id,
@@ -49,26 +51,25 @@ export default class MovieList extends Component {
           vote_average: voteAverage,
           genre_ids: genreIDs,
           rating,
-        }) => {
-        return (
-          <Movie
-            key={id}
-            image={posterPath}
-            title={title}
-            releaseDate={releaseDate}
-            onRate={(value) => onRate(id, value)}
-            overview={overview}
-            rateNumber={voteAverage}
-            genreID={genreIDs}
-            rating={ratedMovies && ratedMovies.get(id) || rating}
-            id={id}
-          />
-        );
-      });
+        }) => (
+        <Movie
+          key={id}
+          image={posterPath}
+          title={title}
+          releaseDate={releaseDate}
+          onRate={(value) => onRate(id, value)}
+          overview={overview}
+          rateNumber={voteAverage}
+          genreID={genreIDs}
+          rating={ratedMovies && ratedMovies.get(id) || rating}
+          id={id}
+        />
+      ));
 
     if (!movies.length) {
-      moviesList = <Title className='not-found-message' level={1}>No results found</Title>;
+      moviesList = <img className='error' src={notResult} alt='not result' />;
     }
+
 
     return (
       <div className='site-card-wrapper'>

@@ -3,13 +3,15 @@ import PropTypes from 'prop-types'
 
 import {Card, Space, Tag, Typography, Rate, Col} from 'antd';
 import './movie.css';
-import img from './no-image.jpg'
+import img from '../../assets/img/no-image.jpg'
 
 import MovieApi from '../../service/movie-api';
 import formatPost from "../../utils/format-description";
 import {Consumer} from '../../service/movie-api_context';
 
 const {Title, Text} = Typography;
+
+const movieApi = new MovieApi();
 
 export default class Movie extends Component {
 
@@ -30,7 +32,7 @@ export default class Movie extends Component {
     rating: 0,
   }
 
-  movieApi = MovieApi.getInstance();
+
 
   getTagColor = (rating) => {
     let borderColor = '#E90000'
@@ -42,9 +44,8 @@ export default class Movie extends Component {
 
   render() {
     const {image, title, releaseDate, overview, genreID, rateNumber, id, onRate, rating = 0,} = this.props
-    const posterUrl = this.movieApi.apiPostersUrlBase;
+    const posterUrl = movieApi.apiPostersUrlBase;
     const imgUrl = `${posterUrl}${image}`;
-
 
     const description = formatPost(overview, 150);
 

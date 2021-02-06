@@ -4,6 +4,15 @@ body {
 
 .site-layout {
     background: #fff;
+    text-align: center;
+}
+
+.site-layout input{
+    border: none;
+    width: 960px;
+    margin: 20px auto;
+    border-bottom: 2px solid #cccccc;
+    outline: none;
 }
 
 .pagination {

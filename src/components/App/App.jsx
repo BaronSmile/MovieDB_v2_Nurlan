@@ -1,31 +1,24 @@
 import React, { Component } from 'react';
+import { debounce } from 'lodash';
 
 import './app.css';
 import 'antd/dist/antd.css';
-import { Layout, Pagination, Row, Tabs } from 'antd';
+import { Layout, Pagination, Row, Tabs, Input } from 'antd';
 
 
-import SearchInput from '../search-input/search-input';
 import MovieApi from '../../service/movie-api';
-import MovieList from '../movie-list/movie-list';
+import MovieList from '../Movie-List/Movie-List';
 import { Provider } from '../../service/movie-api_context';
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
 
+const movieApi = new MovieApi();
 
 export default class App extends Component {
 
-  movieApi = MovieApi.getInstance();
 
   ratedMovies = new Map();
-
-  constructor(props) {
-    super(props);
-    this.movieApi.getGenres().then((data) => {
-      this.genresList(data.genres);
-    });
-  }
 
   state = {
     totalPages: null,
@@ -40,22 +33,29 @@ export default class App extends Component {
 
 
   componentDidMount() {
+    movieApi.getGenres().then((data) => {
+      this.genresList(data.genres);
+    });
     const { searchTerm, page } = this.state;
     this.updateMoviesList(searchTerm, page);
-
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { searchTerm, page, mode } = this.state;
     if (mode === 'search') {
-      if ((prevState.searchTerm === searchTerm)
-        && (prevState.page === page)
-        && (prevState.mode === mode)) return;
+      if (prevState.searchTerm === searchTerm && prevState.page === page && prevState.mode === mode) return;
       this.updateMoviesList(searchTerm, page);
     } else if (mode === 'rated' && prevState.mode !== mode) {
       this.updateRatedMoviesList();
     }
   }
+
+
+  handleInputChange = debounce((event) => {
+    this.setState({
+      searchTerm: event.target.value,
+    });
+  }, 1000);
 
   genresList = (data) => {
     this.setState({
@@ -71,14 +71,6 @@ export default class App extends Component {
   };
 
 
-  updateSearchStr = (searchTerm) => {
-    if (searchTerm === '') return;
-    this.setState({
-      searchTerm,
-      page: 1,
-    });
-  };
-
   onError = () => {
     this.setState({
       error: true,
@@ -87,32 +79,8 @@ export default class App extends Component {
   };
 
 
-  handleInputChange = (({ target: { value } }) => {
-    this.setState({
-      searchTerm: value,
-    });
-  });
-
-
-  getSearch = ({ key }) => {
-    if (key === 'Enter') {
-      const { searchTerm } = this.state;
-      this.movieApi.searchMovie(searchTerm)
-        .then(movies => {
-          this.setMovie([...movies.results], movies.total_results);
-        });
-    }
-  };
-
-  setMovie = (movies) => {
-    this.setState({
-      movies,
-      loading: false,
-    });
-  };
-
   postRateMovie = (id, rating) => {
-    this.movieApi.postRateMovie(id, rating);
+    movieApi.postRateMovie(id, rating).then(res => console.log('postRate:',res));
     this.ratedMovies.set(id, rating);
   };
 
@@ -127,7 +95,7 @@ export default class App extends Component {
       loading: true,
     });
 
-    this.movieApi.searchMovie(str, page)
+    movieApi.searchMovie(str, page)
       .then(res => {
         this.setState({
           movies: res.results,
@@ -144,7 +112,7 @@ export default class App extends Component {
     this.setState({
       loading: true,
     });
-    this.movieApi.getRatedMovies()
+    movieApi.getRatedMovies()
       .then(res => {
         this.setState({
           movies: res.results,
@@ -158,7 +126,7 @@ export default class App extends Component {
 
 
   render() {
-    const { movies, loading, error, searchTerm, page, totalPages, genres } = this.state;
+    const { movies, loading, error, searchTerm, page, totalPages, genres,mode } = this.state;
     const hasData = !(loading || error);
 
 
@@ -180,11 +148,11 @@ export default class App extends Component {
         <Tabs onChange={(event) => this.toggleMenu(event)}>
           <TabPane tab='search' key='search'>
             <Content className='site-layout'>
-              <SearchInput
-                onKeyPress={this.getSearch}
-                onChange={this.handleInputChange}
-                value={searchTerm} />
+              <Input placeholder='Найти фильм'
+                     defaultValue={searchTerm}
+                     onChange={this.handleInputChange} />
               <MovieList
+                type={mode}
                 movies={movies}
                 ratedMovies={this.ratedMovies}
                 loading={loading}
