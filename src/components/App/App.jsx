@@ -23,7 +23,7 @@ export default class App extends Component {
     totalPages: null,
     page: 1,
     movies: [],
-    searchTerm: 'return',
+    searchTerm: 'ralph',
     loading: true,
     error: false,
     mode: 'search',
