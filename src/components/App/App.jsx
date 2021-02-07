@@ -6,14 +6,13 @@ import 'antd/dist/antd.css';
 import { Layout, Pagination, Row, Tabs, Input } from 'antd';
 
 
-import MovieApi from '../../service/movie-api';
+import movieApi from '../../service/movie-api';
 import MovieList from '../Movie-List/Movie-List';
 import { Provider } from '../../service/movie-api_context';
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
 
-const movieApi = new MovieApi();
 
 export default class App extends Component {
 

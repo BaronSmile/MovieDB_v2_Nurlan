@@ -1,4 +1,4 @@
-export default class MovieApi {
+class MovieApi {
 
   apiBase = `https://api.themoviedb.org/3/`;
 
@@ -6,10 +6,10 @@ export default class MovieApi {
 
   apiPostersUrlBase = `https://image.tmdb.org/t/p/w185`;
 
-  // constructor() {
-  //   this.sessionId = '';
-  //   this.createSession();
-  // }
+  constructor() {
+    this.sessionId = '';
+    this.createSession();
+  }
 
 
   async getResource(url, value) {
@@ -59,7 +59,7 @@ export default class MovieApi {
   async getGenres() {
     return this.getResource(`genre/movie/list?api_key=${this.apiKey}`);
   }
-
-
 }
+
+export default new MovieApi();
 

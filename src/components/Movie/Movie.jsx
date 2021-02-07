@@ -5,13 +5,11 @@ import {Card, Space, Tag, Typography, Rate, Col} from 'antd';
 import './movie.css';
 import img from '../../assets/img/no-image.jpg'
 
-import MovieApi from '../../service/movie-api';
+import movieApi from '../../service/movie-api';
 import formatPost from "../../utils/format-description";
 import {Consumer} from '../../service/movie-api_context';
 
 const {Title, Text} = Typography;
-
-const movieApi = new MovieApi();
 
 export default class Movie extends Component {
 
